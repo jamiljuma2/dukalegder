@@ -409,3 +409,5 @@ body{background:var(--palette-ivory)}
 .how-photo figcaption small{font-size:8px;color:#6a7869}
 @media(max-width:950px){.landing-hero-photo{padding-left:10px}.how-photo>img{height:165px}}
 @media(max-width:700px){.landing-hero-photo{width:100%;padding:7px 7px 19px}.landing-hero-photo>img{aspect-ratio:1/1;border-radius:14px}.landing-hero-photo figcaption{left:0;bottom:0;padding:10px 12px}.how-photo{margin-top:22px}.how-photo>img{height:auto;aspect-ratio:16/9;object-position:center 42%}.how-photo figcaption{padding:10px 12px}}
+.payment-state.stale{background:#fff9e8}
+.payment-state.stale small{color:#856414}

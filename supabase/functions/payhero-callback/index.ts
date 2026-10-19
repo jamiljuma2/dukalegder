@@ -30,20 +30,28 @@ Deno.serve(async (request) => {
   let body: Record<string, unknown>
   try { body = await request.json() } catch { return json({ error: 'Invalid JSON callback' }, 400) }
   const result = (body.response && typeof body.response === 'object' ? body.response : body) as Record<string, unknown>
-  const externalReference = typeof result.ExternalReference === 'string' ? result.ExternalReference : ''
+  const getString = (...values: unknown[]) => values.find((value): value is string => typeof value === 'string' && value.length > 0) || null
+  const externalReference = getString(result.ExternalReference, result.external_reference, body.ExternalReference, body.external_reference)
   if (!externalReference) return json({ error: 'Missing external reference' }, 400)
 
-  const success = String(result.Status || '').toLowerCase() === 'success' && Number(result.ResultCode) === 0
-  const amount = Number.isInteger(Number(result.Amount)) ? Number(result.Amount) : null
+  const status = String(result.Status ?? result.status ?? '').toLowerCase()
+  const resultCode = result.ResultCode ?? result.result_code
+  const hasResultCode = resultCode !== undefined && resultCode !== null && resultCode !== ''
+  const resultSucceeded = result.success === true || (result.success !== false && (status === 'success' || (status === '' && hasResultCode && Number(resultCode) === 0)))
+  const resultFailed = result.success === false || ['failed', 'failure', 'cancelled', 'canceled'].includes(status) || (hasResultCode && Number(resultCode) !== 0)
+  if (!resultSucceeded && !resultFailed) return json({ error: 'Payment callback has no final status' }, 400)
+  const success = resultSucceeded && (!hasResultCode || Number(resultCode) === 0)
+  const rawAmount = result.Amount ?? result.amount
+  const amount = rawAmount !== undefined && rawAmount !== null && Number.isInteger(Number(rawAmount)) ? Number(rawAmount) : null
   const admin = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } })
   const { data, error } = await admin.rpc('finalize_plan_payment', {
     p_external_reference: externalReference,
     p_success: success,
     p_amount: amount,
-    p_payhero_reference: typeof result.MerchantRequestID === 'string' ? result.MerchantRequestID : null,
-    p_checkout_request_id: typeof result.CheckoutRequestID === 'string' ? result.CheckoutRequestID : null,
-    p_receipt: typeof result.MpesaReceiptNumber === 'string' ? result.MpesaReceiptNumber : null,
-    p_failure_reason: typeof result.ResultDesc === 'string' ? result.ResultDesc : 'Payment was not completed',
+    p_payhero_reference: getString(result.MerchantRequestID, result.merchant_request_id, result.reference),
+    p_checkout_request_id: getString(result.CheckoutRequestID, result.checkout_request_id),
+    p_receipt: getString(result.MpesaReceiptNumber, result.mpesa_receipt, result.receipt),
+    p_failure_reason: getString(result.ResultDesc, result.result_desc, result.message) || 'Payment was not completed',
     p_callback_payload: body,
   })
   if (error) return json({ error: 'Payment callback could not be reconciled' }, 400)
