@@ -341,7 +341,7 @@ body{background:var(--palette-ivory)}
 @media(prefers-reduced-motion:reduce){.pricing-grid .price-card{animation:none;transition:none}.pricing-grid .price-card::after{transition:none}}
 
 /* Pricing showcase inspired by the supplied dark, luminous reference */
-.landing-shell .landing-pricing{width:100%;max-width:none;margin:0;padding:76px max(22px,calc((100vw - 1100px)/2));background:radial-gradient(ellipse at 50% 0%,#4547d8 0,#2528a4 38%,#171c70 100%);position:relative;isolation:isolate}
+.landing-shell .landing-pricing{width:100%;max-width:none;margin:0;padding:76px max(22px,calc((100vw - 1100px)/2));background:linear-gradient(155deg,#078a18 0%,#00c908 42%,#70e500 76%,#efff83 100%);position:relative;isolation:isolate}
 .landing-shell .landing-pricing::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.22;background-image:radial-gradient(rgba(255,255,255,.75) .7px,transparent .8px);background-size:24px 24px;mask-image:linear-gradient(180deg,#000,transparent 84%)}
 .pricing-showcase{max-width:1060px;margin:auto;padding:46px 50px 32px;border:1px solid rgba(151,164,255,.16);border-radius:15px;background:linear-gradient(145deg,rgba(7,13,63,.97),rgba(13,19,82,.97));box-shadow:0 28px 80px rgba(5,8,49,.32),inset 0 1px rgba(255,255,255,.07)}
 .pricing-showcase>.landing-section-heading{text-align:center;max-width:650px;margin:0 auto 34px}
@@ -487,3 +487,20 @@ body{background:var(--palette-ivory)}
 .landing-benefits li{display:flex;align-items:center;gap:7px;padding:9px 11px;color:#244b25;font-size:10px;font-weight:750;white-space:nowrap;background:linear-gradient(135deg,#f5fbed,#eaf7df);border:1px solid #c9e2b8;border-radius:9px;box-shadow:0 5px 14px rgba(48,114,32,.09)}
 .landing-benefits svg{width:16px;height:16px;padding:3px;flex:none;border-radius:50%;background:#43a314;color:#fff}
 @media(max-width:700px){.landing-benefits{gap:8px 9px;margin-top:19px}.landing-benefits li{padding:8px 9px;font-size:9px}}
+
+/* Subscription plan cards use the requested green and lime palette. */
+.plan-options article{transition:transform .2s ease,box-shadow .2s ease;border-radius:12px}
+.plan-options article:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(8,82,19,.16)}
+.plan-options article:nth-child(1){background:linear-gradient(145deg,#078a1a,#006b13);border-color:#087a18;box-shadow:0 8px 20px rgba(0,90,20,.13)}
+.plan-options article:nth-child(1)>strong,.plan-options article:nth-child(1)>span{color:#fff}
+.plan-options article:nth-child(1)>span small{color:#dcffd0}
+.plan-options article:nth-child(1) p{color:#e2f6dc}
+.plan-options article:nth-child(1) .button.primary{background:#b1f20b;color:#163b0c;box-shadow:none}
+.plan-options article:nth-child(1) .button.primary:hover:not(:disabled){background:#eaff8a}
+.plan-options article:nth-child(2){background:linear-gradient(145deg,#00c908,#63e600);border-color:#36d20a;box-shadow:0 8px 20px rgba(34,151,0,.13)}
+.plan-options article:nth-child(2)>strong,.plan-options article:nth-child(2)>span{color:#103f12}
+.plan-options article:nth-child(2)>span small{color:#245b1b}
+.plan-options article:nth-child(2) p{color:#174c17}
+.plan-options article:nth-child(2) .button.primary{background:#f0ff85;color:#17420e;box-shadow:none}
+.plan-options article:nth-child(2) .button.primary:hover:not(:disabled){background:#fffda1}
+@media(prefers-reduced-motion:reduce){.plan-options article{transition:none}}
