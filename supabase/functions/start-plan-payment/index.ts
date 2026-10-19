@@ -92,20 +92,24 @@ Deno.serve(async (request) => {
 
   let providerBody: Record<string, unknown> = {}
   try { providerBody = await providerResponse.json() } catch { /* handled as provider failure below */ }
-  if (!providerResponse.ok || providerBody.success !== true) {
-    const reason = String(providerBody.message || providerBody.error || `PayHero returned HTTP ${providerResponse.status}`)
+  const checkoutRequestId = typeof providerBody.CheckoutRequestID === 'string' ? providerBody.CheckoutRequestID : ''
+  if (!providerResponse.ok || providerBody.success !== true || !checkoutRequestId) {
+    const reason = String(providerBody.message || providerBody.error || (!checkoutRequestId
+      ? `PayHero did not return an M-Pesa checkout request ID (HTTP ${providerResponse.status})`
+      : `PayHero returned HTTP ${providerResponse.status}`))
     await admin.from('subscription_payments').update({ status: 'failed', failure_reason: reason.slice(0, 500) }).eq('id', checkout.payment_id).eq('status', 'pending')
-    return reply({ error: 'PayHero could not start the M-Pesa prompt. Check the number and try again.' }, 502)
+    return reply({ error: 'PayHero could not start the M-Pesa prompt.', detail: reason.slice(0, 240) }, 502)
   }
 
   await admin.from('subscription_payments').update({
     payhero_reference: typeof providerBody.reference === 'string' ? providerBody.reference : null,
-    checkout_request_id: typeof providerBody.CheckoutRequestID === 'string' ? providerBody.CheckoutRequestID : null,
+    checkout_request_id: checkoutRequestId,
   }).eq('id', checkout.payment_id)
 
   return reply({
     payment_id: checkout.payment_id,
     external_reference: checkout.external_reference,
+    phone_number: checkout.phone,
     status: 'pending',
     message: 'Approve the M-Pesa prompt on your phone. Your plan changes after PayHero confirms payment.',
   }, 202)
