@@ -1,0 +1,8 @@
+# PayHero calls this endpoint server-to-server and cannot attach a Supabase JWT.
+# The function verifies the key embedded in the configured CALLBACK_URL.
+[functions.payhero-callback]
+verify_jwt = false
+
+# Checkout requests originate from signed-in users and must pass Supabase Auth.
+[functions.start-plan-payment]
+verify_jwt = true

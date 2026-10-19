@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 250" role="img" aria-labelledby="title desc">
+  <title id="title">DukaLedger</title>
+  <desc id="desc">Know your stock, track your debts, see your daily numbers.</desc>
+  <defs>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0750a7"/><stop offset="1" stop-color="#0878f6"/></linearGradient>
+    <linearGradient id="green" x1="0" y1="1" x2="0" y2="0"><stop stop-color="#57ba45"/><stop offset="1" stop-color="#6dcc4d"/></linearGradient>
+  </defs>
+  <g transform="translate(12 14)">
+    <path d="M41 27h43l-22 68H12a22 22 0 0 1-17-36L28 34a18 18 0 0 1 13-7Z" fill="url(#blue)"/>
+    <path d="M98 27h42l22 68H65l22-68a12 12 0 0 1 11-0Z" fill="#0865df"/>
+    <path d="M155 27h31a18 18 0 0 1 14 7l33 25a22 22 0 0 1-17 36h-45Z" fill="url(#blue)"/>
+    <path d="M11 103h41v79a14 14 0 0 1-14 14h-4a23 23 0 0 1-23-23Z" fill="#064582"/>
+    <path d="M184 103h35l-31 38-4-5Z" fill="#064582"/>
+    <rect x="57" y="139" width="25" height="44" rx="6" fill="url(#green)"/>
+    <rect x="91" y="120" width="25" height="63" rx="6" fill="url(#green)"/>
+    <rect x="125" y="99" width="25" height="84" rx="6" fill="url(#green)"/>
+    <path d="M35 195c48 0 85-15 116-47l24-25-12-12 50-16-2 52-12-13-25 27c-34 36-78 54-132 54Z" fill="url(#blue)"/>
+  </g>
+  <text x="267" y="142" font-family="Arial, Helvetica, sans-serif" font-size="106" font-weight="800" letter-spacing="-5" fill="#073b78">Duka</text>
+  <text x="486" y="142" font-family="Arial, Helvetica, sans-serif" font-size="106" font-weight="800" letter-spacing="-5" fill="#0874ed">Ledger</text>
+  <text x="269" y="191" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="400" fill="#124981">Know your stock, track your debts,</text>
+  <text x="269" y="225" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="400" fill="#124981">see your daily numbers.</text>
+</svg>
