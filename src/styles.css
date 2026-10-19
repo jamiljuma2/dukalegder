@@ -482,8 +482,8 @@ body{background:var(--palette-ivory)}
  .page-wrap{padding:16px 12px 30px}
 }
 
-/* Compact benefit row balances the landing hero and makes key tools scannable. */
-.landing-benefits{display:flex;flex-wrap:wrap;gap:10px 16px;list-style:none;padding:0;margin:25px 0 0}
-.landing-benefits li{display:flex;align-items:center;gap:6px;color:#536354;font-size:10px;font-weight:650;white-space:nowrap}
-.landing-benefits svg{width:15px;height:15px;padding:2px;flex:none;border-radius:50%;background:#eaf3e5;color:#367a2c}
-@media(max-width:700px){.landing-benefits{gap:8px 12px;margin-top:19px}.landing-benefits li{font-size:9px}}
+/* Bright benefit cards keep the hero highlights easy to scan. */
+.landing-benefits{display:flex;flex-wrap:wrap;gap:10px 11px;list-style:none;padding:0;margin:25px 0 0}
+.landing-benefits li{display:flex;align-items:center;gap:7px;padding:9px 11px;color:#244b25;font-size:10px;font-weight:750;white-space:nowrap;background:linear-gradient(135deg,#f5fbed,#eaf7df);border:1px solid #c9e2b8;border-radius:9px;box-shadow:0 5px 14px rgba(48,114,32,.09)}
+.landing-benefits svg{width:16px;height:16px;padding:3px;flex:none;border-radius:50%;background:#43a314;color:#fff}
+@media(max-width:700px){.landing-benefits{gap:8px 9px;margin-top:19px}.landing-benefits li{padding:8px 9px;font-size:9px}}
