@@ -87,7 +87,7 @@ The automated Node tests cover the pure profit, cost, balance and plan-limit hel
 
 ### PayHero subscription payments
 
-The plan prices are Free (KSh 0), Starter (KSh 300/month), and Plus (KSh 600/month). An owner starts an M-Pesa STK push from Settings. The database creates the expected amount and reference; the plan is activated for one month only after the callback matches that reference and amount. Repeated callbacks are idempotent. Plus is required to invite staff, and expired paid plans fall back to the Free product cap and staff access.
+The plan prices are Free (KSh 0), Starter (KSh 500/month), and Plus (KSh 1,200/month). An owner starts an M-Pesa STK push from Settings. The database creates the expected amount and reference; the plan is activated for one month only after the callback matches that reference and amount. Repeated callbacks are idempotent. Plus is required to invite staff, and expired paid plans fall back to the Free product cap and staff access.
 
 1. Create a PayHero account, register an M-Pesa payment channel, and create API credentials. The API call uses PayHero's documented `POST https://backend.payhero.co.ke/api/v2/payments` endpoint with Basic authentication, an M-Pesa phone number, channel ID, external reference, and callback URL.
 2. Set server-side Edge Function secrets; do not put these in Vite variables or the browser `.env`:
@@ -107,7 +107,7 @@ The plan prices are Free (KSh 0), Starter (KSh 300/month), and Plus (KSh 600/mon
    npx supabase functions deploy payhero-callback
    ```
 
-4. Apply the SQL migrations through `202610190007_payhero_subscription_billing.sql` before deploying the app with `npx supabase db push`. Use PayHero test credits/test transactions first; verify both success and cancellation callbacks in the Supabase function logs and confirm that only successful, amount-matched callbacks activate a plan.
+4. Apply all SQL migrations with `npx supabase db push` before deploying the app. Use PayHero test credits/test transactions first; verify both success and cancellation callbacks in the Supabase function logs and confirm that only successful, amount-matched callbacks activate a plan.
 
 ## Data safety and recovery
 
@@ -116,7 +116,7 @@ Use Supabase's managed backup/PITR options appropriate to the selected plan, and
 ## Current scope and remaining production work
 
 - Sale recording and stock deduction run in one database transaction, validate stock server-side, snapshot item costs/prices, and reject unpaid sales without a customer. Stock quantity edits use an audited RPC. Customer balances are derived from sales and repayment records.
-- The Free plan's 20 active-product cap is checked in a serialized database function. Starter and Plus use the proposed KSh 300/KSh 600 monthly prices. Paid upgrades use PayHero STK push and server-side callback reconciliation; production still requires valid PayHero credentials/channel settings and live end-to-end payment verification.
+- The Free plan's 20 active-product cap is checked in a serialized database function. Starter is KSh 500/month and Plus is KSh 1,200/month. Paid upgrades use PayHero STK push and server-side callback reconciliation; production still requires valid PayHero credentials/channel settings and live end-to-end payment verification.
 - The launch workflow still needs a verified Supabase integration test suite for RLS isolation, concurrent stock/sale operations, and repayments; add monitoring and error reporting; configure and rehearse backups; and complete mobile/browser QA on target devices.
 - Sale detail/printable receipts, sale cancellation/refunds, editing expenses, a seven-day chart, downloadable customer statements, automatic subscription renewals, and payment-status reconciliation when a provider callback is missing are not implemented. Staff invitations and one-time PayHero plan checkout are implemented. Customer account history shows sales and repayments, and WhatsApp reminders open a message for manual review and sending.
 - Financial reports are operational estimates. Gross profit uses stored sale cost snapshots; operating profit subtracts recorded operating expenses and excludes stock purchases to avoid double counting. Reports are not formal accounting or tax advice.
