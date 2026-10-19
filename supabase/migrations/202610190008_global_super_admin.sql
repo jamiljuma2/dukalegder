@@ -148,15 +148,5 @@ grant execute on function public.admin_list_users() to authenticated;
 grant execute on function public.admin_list_businesses() to authenticated;
 grant execute on function public.admin_set_global_role(uuid,text) to authenticated;
 
--- Promote the requested account if it already exists when this migration runs.
--- If it is created later, run the one-time UPDATE documented in README.md.
-update public.profiles p
-set global_role='super_admin',full_name='Jamil Juma'
-from auth.users u
-where u.id=p.id and lower(u.email)='jumajamil314@gmail.com'
-  and u.email_confirmed_at is not null;
-
--- A platform super admin has no tenant membership; business records are kept.
-delete from public.business_members m
-using public.profiles p
-where p.id=m.user_id and p.global_role='super_admin';
+-- Promote specific accounts separately through the trusted SQL editor after
+-- verifying the Auth user and transferring any sole-owned businesses.

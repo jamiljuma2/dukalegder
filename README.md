@@ -19,24 +19,34 @@ DukaLedger is a mobile-first shop ledger for Kenyan small retailers. This first 
 
 ### Platform super admin
 
-Apply migration `202610190008_global_super_admin.sql` after the existing migrations. It promotes the confirmed Auth account `jumajamil314@gmail.com` to `super_admin`, sets the profile name to `Jamil Juma`, and removes its business memberships if that account already exists. If the account is created afterward, create it through **Supabase Dashboard → Authentication → Users** (or let the user sign up and confirm the email), then run this in the Supabase SQL editor:
+Apply migration `202610190008_global_super_admin.sql` after the existing migrations. To grant platform admin access to an account created later, first verify the account in **Supabase Dashboard → Authentication → Users** and copy its user ID. Before promoting an account that owns a shop, transfer that shop to another owner. Then run this one-time statement in the Supabase SQL editor, replacing the placeholder with the verified user ID:
 
 ```sql
-update public.profiles p
-set global_role = 'super_admin', full_name = 'Jamil Juma'
-from auth.users u
-where u.id = p.id
-  and lower(u.email) = 'jumajamil314@gmail.com'
-  and u.email_confirmed_at is not null;
+begin;
 
-delete from public.business_members m
-using auth.users u, public.profiles p
-where p.id = m.user_id and u.id = p.id
-  and lower(u.email) = 'jumajamil314@gmail.com'
-  and p.global_role = 'super_admin';
+do $$
+declare target_user uuid := 'REPLACE_WITH_VERIFIED_AUTH_USER_ID'::uuid;
+begin
+  if not exists (
+    select 1 from auth.users
+    where id = target_user and email_confirmed_at is not null
+  ) then
+    raise exception 'A confirmed Auth user with that ID was not found';
+  end if;
+
+  update public.profiles
+  set global_role = 'super_admin'
+  where id = target_user;
+  if not found then raise exception 'User profile was not found'; end if;
+
+  delete from public.business_members where user_id = target_user;
+end
+$$;
+
+commit;
 ```
 
-The account can then sign in and open **Platform admin** without joining or selecting a shop. The database rejects future business memberships for super admins. Promoting an account removes its existing memberships; shop records remain, but transfer any sole-owner shop to another account first. Its global role is stored in `public.profiles`, but authenticated clients cannot update that column; later role changes must go through the admin-only `admin_set_global_role` function. Never put a service-role key or an account password in the frontend environment.
+The account can then sign in and open **Platform admin** without joining or selecting a shop. The database rejects future business memberships for super admins. Promotion removes existing memberships but keeps shop records. Global roles are stored in `public.profiles`; authenticated clients cannot change them. Later role changes must use the admin-only `admin_set_global_role` function. Keep account IDs, emails, passwords, and service-role keys out of checked-in documentation, source code, and frontend environment variables.
 
 Super admins can delete a business from **Platform admin → Businesses**. The operation requires typing the business name exactly and permanently deletes that business's related sales, customers, inventory, payments, subscriptions, and audit history.
 
