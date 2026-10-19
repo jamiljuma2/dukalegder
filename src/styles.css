@@ -435,6 +435,10 @@ body{background:var(--palette-ivory)}
 .public-subpage .how-inner{min-height:calc(100vh - 250px);align-items:center}
 .public-subpage .landing-faq{min-height:calc(100vh - 200px);align-items:start;padding-top:76px;padding-bottom:76px}
 @media(max-width:700px){
+ .app-shell>.sidebar,.admin-shell>.sidebar{overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;scrollbar-width:thin}
+ .app-shell>.sidebar .sidebar-bottom,.admin-shell>.sidebar .admin-sidebar-bottom{flex:none;margin-top:auto;padding-top:12px}
+}
+@media(max-width:700px){
  .landing-home-page{padding-bottom:34px}
  .landing-home-links{width:calc(100% - 36px);grid-template-columns:1fr;padding:23px 0;gap:9px}
  .landing-home-links>a{min-height:83px;padding:14px 16px}
