@@ -411,6 +411,7 @@ body{background:var(--palette-ivory)}
 @media(max-width:700px){.landing-hero-photo{width:100%;padding:7px 7px 19px}.landing-hero-photo>img{aspect-ratio:1/1;border-radius:14px}.landing-hero-photo figcaption{left:0;bottom:0;padding:10px 12px}.how-photo{margin-top:22px}.how-photo>img{height:auto;aspect-ratio:16/9;object-position:center 42%}.how-photo figcaption{padding:10px 12px}}
 .payment-state.stale{background:#fff9e8}
 .payment-state.stale small{color:#856414}
+.settings-profile-layout{grid-template-columns:minmax(0,1fr);max-width:760px}
 
 /* Keep the public content easy to navigate as focused pages. */
 .landing-home-page{padding-bottom:56px}
