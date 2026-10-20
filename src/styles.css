@@ -526,3 +526,6 @@ body{background:var(--palette-ivory)}
 .password-visibility{position:absolute;top:50%;right:5px;transform:translateY(-50%);width:34px;height:34px;display:grid;place-items:center;border:0;border-radius:6px;background:transparent;color:#68798c;cursor:pointer}
 .password-visibility:hover{background:#f1f5f8;color:#284b70}
 .password-visibility:focus-visible{outline:2px solid #397cce;outline-offset:1px}
+
+.export-actions{display:flex;gap:8px;align-items:center}.export-actions .button{white-space:nowrap}
+@media(max-width:700px){.page-title:has(.export-actions){flex-wrap:wrap}.export-actions{width:100%;flex-wrap:wrap}.export-actions .button{flex:1;justify-content:center}}
