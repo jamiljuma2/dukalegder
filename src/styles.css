@@ -529,3 +529,10 @@ body{background:var(--palette-ivory)}
 
 .export-actions{display:flex;gap:8px;align-items:center}.export-actions .button{white-space:nowrap}
 @media(max-width:700px){.page-title:has(.export-actions){flex-wrap:wrap}.export-actions{width:100%;flex-wrap:wrap}.export-actions .button{flex:1;justify-content:center}}
+
+/* Keep sidebar controls visible while allowing long navigation menus to scroll. */
+.app-shell>.sidebar,.admin-shell>.sidebar{overflow:hidden;min-height:0}
+.app-shell>.sidebar .main-nav,.admin-shell>.sidebar .admin-nav{flex:1 1 auto;min-height:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;scrollbar-width:thin}
+.app-shell>.sidebar .main-nav>.nav-link,.admin-shell>.sidebar .admin-nav>.admin-nav-link{flex:0 0 auto;min-height:43px}
+.admin-shell>.sidebar .admin-nav>.admin-nav-link{min-height:39px}
+.app-shell>.sidebar .sidebar-bottom,.admin-shell>.sidebar .admin-sidebar-bottom{flex:0 0 auto}
