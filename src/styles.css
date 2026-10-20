@@ -510,3 +510,8 @@ body{background:var(--palette-ivory)}
 .admin-row-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px}
 .admin-open-business{border:1px solid #cfe2ca;border-radius:6px;padding:5px 8px;background:#f4f9f1;color:#286b26;font-size:8px;font-weight:750}
 .admin-open-business:hover{background:#e8f3e2;border-color:#b7d6ad}
+.password-input-wrap{position:relative;display:block}
+.password-input-wrap>input{padding-right:46px}
+.password-visibility{position:absolute;top:50%;right:5px;transform:translateY(-50%);width:34px;height:34px;display:grid;place-items:center;border:0;border-radius:6px;background:transparent;color:#68798c;cursor:pointer}
+.password-visibility:hover{background:#f1f5f8;color:#284b70}
+.password-visibility:focus-visible{outline:2px solid #397cce;outline-offset:1px}
