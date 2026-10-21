@@ -228,15 +228,16 @@ function Products({business,flash,role='owner'}){const canManage=role!=='staff';
   let imageWarning=''
   if(imageFile){
    let uploaded
-   try{
-    uploaded=await uploadImage(productId,imageFile)
+   try{uploaded=await uploadImage(productId,imageFile)}
+   catch(error){imageWarning=`Product saved, but image upload failed: ${error.message}`}
+   if(uploaded){
     const {error}=await supabase.from('products').update({image_url:uploaded.url,image_path:uploaded.path}).eq('id',productId)
-    if(error)throw error
-   }catch(error){
-    if(uploaded?.path){try{await cleanupImage(uploaded.path,productId)}catch(cleanupError){console.warn('Could not clean up the unreferenced product image:',cleanupError)}}
-    imageWarning=`Product saved, but its image could not be applied: ${error.message}`
+    if(error){
+     try{await cleanupImage(uploaded.path,productId)}catch(cleanupError){console.warn('Could not clean up the unreferenced product image:',cleanupError)}
+     imageWarning=`Product saved, but its image could not be linked: ${error.message}`
+    }
    }
-   if(!imageWarning&&previousPath&&previousPath!==uploaded.path){
+   if(uploaded&&!imageWarning&&previousPath&&previousPath!==uploaded.path){
     try{await cleanupImage(previousPath,productId)}catch(error){imageWarning=`Product saved with its new image, but the old image file could not be cleaned up: ${error.message}`}
    }
   }else if(editing&&imageRemoved&&previousPath){
