@@ -572,3 +572,4 @@ body{background:var(--palette-ivory)}
 .app-shell .icon-button,.admin-shell .icon-button{color:#526454}
 .app-shell:not(.admin-shell) .user-row .icon-button{color:#f0f7ee}
 .app-shell:not(.admin-shell) .user-row .icon-button:hover{background:rgba(255,255,255,.16);color:#fff}
+.row-actions a{background:none;border:0;color:#176b35;font-size:9px;font-weight:600;padding:3px;white-space:nowrap}
