@@ -570,3 +570,5 @@ body{background:var(--palette-ivory)}
 .admin-shell .stack-form label,.admin-shell .modal-form label{color:#354b39}
 .app-shell .button.secondary,.admin-shell .button.secondary{color:#263a2a;border-color:#cbd5ca}
 .app-shell .icon-button,.admin-shell .icon-button{color:#526454}
+.app-shell:not(.admin-shell) .user-row .icon-button{color:#f0f7ee}
+.app-shell:not(.admin-shell) .user-row .icon-button:hover{background:rgba(255,255,255,.16);color:#fff}
