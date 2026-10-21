@@ -530,9 +530,43 @@ body{background:var(--palette-ivory)}
 .export-actions{display:flex;gap:8px;align-items:center}.export-actions .button{white-space:nowrap}
 @media(max-width:700px){.page-title:has(.export-actions){flex-wrap:wrap}.export-actions{width:100%;flex-wrap:wrap}.export-actions .button{flex:1;justify-content:center}}
 
-/* Keep sidebar controls visible while allowing long navigation menus to scroll. */
-.app-shell>.sidebar,.admin-shell>.sidebar{overflow:hidden;min-height:0}
-.app-shell>.sidebar .main-nav,.admin-shell>.sidebar .admin-nav{flex:1 1 auto;min-height:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;scrollbar-width:thin}
+/* Keep every sidebar link reachable on short screens and with long feature lists. */
+.app-shell>.sidebar,.admin-shell>.sidebar{overflow-x:hidden;overflow-y:auto;min-height:0;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;scrollbar-width:thin}
+.app-shell>.sidebar .main-nav,.admin-shell>.sidebar .admin-nav{flex:0 0 auto;min-height:auto;overflow:visible}
 .app-shell>.sidebar .main-nav>.nav-link,.admin-shell>.sidebar .admin-nav>.admin-nav-link{flex:0 0 auto;min-height:43px}
 .admin-shell>.sidebar .admin-nav>.admin-nav-link{min-height:39px}
 .app-shell>.sidebar .sidebar-bottom,.admin-shell>.sidebar .admin-sidebar-bottom{flex:0 0 auto}
+
+/* Dashboard readability: keep supporting text and data legible across features. */
+.app-shell,.admin-shell{
+  --muted:#586a5b;
+  color:#243524;
+}
+.app-shell .muted,.admin-shell .muted{color:#586a5b}
+.app-shell .eyebrow,.admin-shell .eyebrow{color:#5f7161}
+.app-shell .page-title .muted,.admin-shell .page-title .muted{color:#586a5b}
+.app-shell .panel-heading p,.admin-shell .panel-heading p,
+.app-shell .empty-state p,.admin-shell .empty-state p,
+.app-shell .metric-card>small,.admin-shell .metric-card>small,
+.app-shell .toolbar-count,.admin-shell .toolbar-count,
+.app-shell .today-label,.admin-shell .today-label{color:#596b5d}
+.app-shell th,.admin-shell th{color:#526454;font-size:10px}
+.app-shell td,.admin-shell td{color:#435548;font-size:12px}
+.app-shell .strong,.admin-shell .strong{color:#263a2a}
+.app-shell .table-product strong,.app-shell .compact-row strong,
+.admin-shell .table-product strong,.admin-shell .compact-row strong{color:#263a2a;font-size:12px}
+.app-shell .table-product small,.app-shell .compact-row small,
+.admin-shell .table-product small,.admin-shell .compact-row small{color:#596b5d;font-size:11px}
+.app-shell .pill,.admin-shell .pill{color:#435548}
+.app-shell .subtle-link,.app-shell .row-actions button,
+.admin-shell .subtle-link,.admin-shell .row-actions button{color:#176b35}
+.app-shell .searchbox,.admin-shell .searchbox{color:#586a5b}
+.app-shell .searchbox input::placeholder,.admin-shell .searchbox input::placeholder,
+.app-shell .stack-form input::placeholder,.app-shell .modal-form input::placeholder,
+.admin-shell .stack-form input::placeholder,.admin-shell .modal-form input::placeholder{color:#69796b;opacity:1}
+.app-shell .optional,.admin-shell .optional{color:#68796a}
+.app-shell .empty-state h3,.admin-shell .empty-state h3{color:#263a2a}
+.app-shell .stack-form label,.app-shell .modal-form label,
+.admin-shell .stack-form label,.admin-shell .modal-form label{color:#354b39}
+.app-shell .button.secondary,.admin-shell .button.secondary{color:#263a2a;border-color:#cbd5ca}
+.app-shell .icon-button,.admin-shell .icon-button{color:#526454}
