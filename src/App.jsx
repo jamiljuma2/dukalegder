@@ -6,7 +6,7 @@ import { money, nairobiEnd, nairobiStart, shortDate, todayNairobi } from './lib/
 import { grossProfitEstimate, operatingProfitEstimate } from './lib/metrics'
 import { expiryState } from './lib/operations'
 import { getSubscriptionExpiryState } from './lib/subscription'
-import { cacheSnapshot, readSnapshot, cacheNamedSnapshot, readNamedSnapshot, enqueue, listOperations, listUserOperations, syncOperations, updateOperation, makeId } from './lib/offline'
+import { cacheSnapshot, readSnapshot, cacheNamedSnapshot, readNamedSnapshot, enqueue, listOperations, listUserOperations, syncOperations, updateOperation, makeId, syncErrorMessage } from './lib/offline'
 import ProductImagePicker, { ProductImageView, ProductThumbnail } from './ProductImagePicker'
 import { prepareProductImage, productImagePath } from './lib/productImages'
 const CashReconciliation = lazy(() => import('./Operations').then(module => ({ default: module.CashReconciliation })))
@@ -222,7 +222,7 @@ function useBusinessData(business,includeExpenses=true){
 
 function OfflineSyncBar({session,business,flash}){const [online,setOnline]=useState(navigator.onLine),[ops,setOps]=useState([]),[show,setShow]=useState(false),[lastSync,setLastSync]=useState(null),[syncing,setSyncing]=useState(false)
  const refresh=useCallback(async()=>{if(!session?.user?.id||!business?.id)return;try{const rows=await listOperations(session.user.id,business.id);setOps(rows);const snapshot=await readSnapshot(session.user.id,business.id);const latest=rows.filter(row=>row.status==='synced').sort((a,b)=>b.syncedAt.localeCompare(a.syncedAt))[0];setLastSync([snapshot?.savedAt,latest?.syncedAt].filter(Boolean).sort().at(-1)||null)}catch(error){console.warn(error)}},[session?.user?.id,business?.id])
- const sync=useCallback(async(force=false)=>{if(!online||syncing)return;setSyncing(true);try{await syncOperations(session.user.id,business.id,refresh,force);await refresh()}finally{setSyncing(false)}},[online,syncing,session?.user?.id,business?.id,refresh])
+ const sync=useCallback(async(force=false)=>{if(!online||syncing)return;setSyncing(true);try{await syncOperations(session.user.id,business.id,refresh,force);await refresh()}catch(error){flash(syncErrorMessage(error),'error');await refresh()}finally{setSyncing(false)}},[online,syncing,session?.user?.id,business?.id,refresh,flash])
  useEffect(()=>{const up=()=>setOnline(true),down=()=>setOnline(false),focus=()=>{if(document.visibilityState==='visible'){sync();refresh()}};window.addEventListener('online',up);window.addEventListener('offline',down);window.addEventListener('focus',focus);document.addEventListener('visibilitychange',focus);refresh();return()=>{window.removeEventListener('online',up);window.removeEventListener('offline',down);window.removeEventListener('focus',focus);document.removeEventListener('visibilitychange',focus)}},[refresh,sync])
  useEffect(()=>{if(online)sync()},[online])
  useEffect(()=>{if(!online)return;const next=ops.filter(op=>op.status==='pending'&&op.nextAttemptAt>Date.now()).reduce((earliest,op)=>Math.min(earliest,op.nextAttemptAt),Infinity);if(!Number.isFinite(next))return;const timer=window.setTimeout(()=>sync(),Math.max(0,next-Date.now()));return()=>window.clearTimeout(timer)},[ops,online,sync])
