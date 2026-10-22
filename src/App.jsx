@@ -36,7 +36,7 @@ function InstallAppButton(){
 function authNetworkErrorMessage(mode,offline){
  if(!offline)return 'Could not reach the sign-in service. Check your connection and try again.'
  const action={signup:'Creating an account',forgot:'Requesting a password reset',reset:'Updating your password'}[mode]||'Signing in'
- return `You’re offline. ${action} requires an internet connection. Reconnect and try again.${mode==='login'?' If you were already signed in before going offline, reopen the app without signing out to use saved shop data.':''}`
+ return `Offline. ${action} requires internet.${mode==='login'?' Already signed in? Reopen the app to use saved data.':' Reconnect and try again.'}`
 }
 function AuthPage({ mode, setMode, onAuth }) {
   const [busy, setBusy] = useState(false); const [error, setError] = useState(''); const [showPasswords,setShowPasswords]=useState(false)
