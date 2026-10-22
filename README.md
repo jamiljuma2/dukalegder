@@ -78,7 +78,7 @@ npm test
 npm run build
 ```
 
-The automated Node tests cover the pure profit, cost, balance and plan-limit helpers. Critical writes are enforced by PostgreSQL functions and constraints. This repository does not yet include an automated Supabase integration suite for RLS, transaction concurrency, or cross-business isolation; test those against a separate development Supabase project before a customer pilot.
+The automated Node tests cover the pure profit, cost, balance and plan-limit helpers. `supabase/tests/offline_rpc_rollback_smoke.sql` exercises offline RPC idempotency, stock conflict handling, image association and purchase edits against an existing owner/product fixture; successful writes are rolled back. It does not replace separate-project tests for RLS isolation, true concurrent calls, or full browser/device offline behavior.
 
 ## Deploy to Vercel
 
@@ -126,3 +126,16 @@ Use Supabase's managed backup/PITR options appropriate to the selected plan, and
 ## Stack
 
 React + Vite, React Router, Lucide React, Supabase Auth/Postgres/RLS, and browser-generated CSV exports. The interface uses Africa/Nairobi date boundaries, DD/MM/YYYY display dates and Kenyan shillings.
+# Offline operation (preview)
+
+DukaLedger now installs as a PWA and stores the application shell, synchronized shop snapshots, and queued operations in the browser. Offline records are scoped by authenticated user and business. The service worker caches only same-origin app files and never caches Supabase API, auth, storage, or function responses. Browsers may evict local data when device storage is low; install and offline behavior also depend on browser support and an initial successful load.
+
+Sales, repayments, expenses, customer creation, and stock adjustments can be queued locally. Queued sales do not change the authoritative server balance: the existing row-locked `create_sale` RPC validates stock and idempotently applies the transaction when connectivity returns. Repayments and stock adjustments are validated by server functions; expense and customer creation use request-key protected functions. A rejected operation stays in the local queue for review. Local sales and stock changes are provisional until the queue shows them as synced. Sign out warns about unresolved operations and leaves them on the device for the same account to recover later.
+
+Apply migrations in order, including `202610220007_offline_expense_idempotency.sql` through `202610220009_offline_purchase_conflicts.sql`, before deploying the client. Repeated delivery is keyed by stable operation IDs. Automatic retry applies exponential backoff to network and server availability failures; permission, validation, and conflict errors remain in the queue for user action. Background Sync is not required.
+
+The linked DukaLedger Supabase project has all 24 local migration versions recorded as applied after its live schema and historical data effects were checked. `npx supabase db push --dry-run --linked` reports no pending migrations. The offline RPC smoke script was run against an existing owner/product fixture; successful writes were rolled back. Repayment was skipped because that shop had no outstanding customer balance.
+
+Product creation/editing, product image capture/upload, supplier purchase drafts/edits, receipt confirmation, and supplier payments are also queued. Product edits include the last observed `updated_at` value and stop for review if another device changed the product. Supplier draft edits use the same server conflict check. Images remain in IndexedDB until the upload and product link both succeed; the upload path is stable across retries. Browser storage is not encrypted and can be evicted by the browser. Staff should keep the device locked and avoid clearing browser data while operations are pending.
+
+The production build's service worker installation and app-shell reopen were verified in headless Chromium with offline network emulation. Build and unit tests also pass. Full verification still needs authenticated browser tests for queued image failure/retry, expired-session recovery, account switching, true concurrent-device sales, and repayment sync using a dedicated Supabase test project. Stock quantities remain provisional on each offline device; whichever sales reach the server first are validated under row locks, and later sales that exceed remaining stock stay failed for review.

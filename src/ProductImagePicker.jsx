@@ -39,7 +39,7 @@ export default function ProductImagePicker({ src, onSelect, onRemove }) {
     </div>
     <div className="product-image-actions">
       <button className="button secondary small" type="button" onClick={() => galleryInput.current?.click()}><Upload size={15}/>Upload Image</button>
-      <input ref={galleryInput} className="product-image-input" type="file" accept="image/jpeg,image/png,image/webp" onChange={handleFile} aria-label="Upload product image"/>
+      <input ref={galleryInput} className="product-image-input" type="file" accept="image/jpeg,image/png,image/webp" capture="environment" onChange={handleFile} aria-label="Take or select a product image"/>
     </div>
     <p className="product-image-help">Images are resized automatically before upload. You can replace or remove the photo before saving.</p>
   </div>
