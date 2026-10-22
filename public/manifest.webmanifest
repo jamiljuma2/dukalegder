@@ -3,7 +3,7 @@
   "name": "DukaLedger — Shop Management",
   "short_name": "DukaLedger",
   "description": "Manage shop stock, sales, customer debts and expenses in one place.",
-  "start_url": "/",
+  "start_url": "/app",
   "scope": "/",
   "display": "standalone",
   "background_color": "#f7faf4",
