@@ -465,10 +465,11 @@ body{background:var(--palette-ivory)}
 
 /* Short landscape touch screens use the same scrollable navigation drawer. */
 @media (orientation:landscape) and (max-height:560px) and (max-width:1000px){
- .app-shell>.sidebar,.admin-shell>.sidebar{inset:8px auto 8px 8px;width:min(270px,calc(100vw - 24px));max-height:calc(100dvh - 16px);overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;scrollbar-width:thin;transform:translateX(-110%);transition:transform .22s ease;box-shadow:none}
+ .app-shell>.sidebar,.admin-shell>.sidebar{z-index:50;inset:8px auto 8px 8px;width:min(270px,calc(100vw - 24px));max-height:calc(100dvh - 16px);overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;scrollbar-width:thin;transform:translateX(-110%);transition:transform .22s ease;box-shadow:none}
  .app-shell>.sidebar.mobile-open,.admin-shell>.sidebar.mobile-open{transform:translateX(0);box-shadow:15px 0 45px #172d4530}
  .app-shell>.sidebar .sidebar-bottom,.admin-shell>.sidebar .admin-sidebar-bottom{flex:none;margin-top:auto;padding-top:12px}
- .app-shell>.mobile-scrim,.admin-shell>.mobile-scrim{display:block;position:fixed;z-index:19;inset:0;background:#13253b70;border:0}
+ .app-shell>.mobile-scrim,.admin-shell>.mobile-scrim{display:block;position:fixed;z-index:40;inset:0;background:#13253b70;border:0}
+ .app-shell .offline-sync{z-index:12}
  .app-shell>.main-area,.admin-shell>.main-area{margin-left:0}
  .admin-shell>.main-area{padding:0 12px 18px}
  .mobile-menu{display:grid;margin-left:-7px}
