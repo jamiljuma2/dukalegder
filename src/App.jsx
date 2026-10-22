@@ -39,8 +39,8 @@ function authNetworkErrorMessage(mode,offline){
  return `Offline. ${action} requires internet.${mode==='login'?' Already signed in? Reopen the app to use saved data.':' Reconnect and try again.'}`
 }
 function AuthPage({ mode, setMode, onAuth }) {
-  const [busy, setBusy] = useState(false); const [error, setError] = useState(''); const [showPasswords,setShowPasswords]=useState(false)
-  async function submit(e) { e.preventDefault(); setError(''); const data = new FormData(e.currentTarget); const email=data.get('email'), password=data.get('password');if(mode==='signup'&&password!==data.get('confirmPassword')){setError('Passwords do not match.');return}setBusy(true)
+  const [busy, setBusy] = useState(false); const [error, setError] = useState(''); const [success,setSuccess]=useState(false); const [showPasswords,setShowPasswords]=useState(false)
+  async function submit(e) { e.preventDefault(); setError(''); setSuccess(false); const data = new FormData(e.currentTarget); const email=data.get('email'), password=data.get('password');if(mode==='signup'&&password!==data.get('confirmPassword')){setError('Passwords do not match.');return}setBusy(true)
     try {
       const result = mode === 'signup' ? await supabase.auth.signUp({ email, password, options: { data: { full_name: data.get('name') }, emailRedirectTo: window.location.href } }) : mode==='forgot' ? await supabase.auth.resetPasswordForEmail(email,{redirectTo:`${window.location.origin}/login`}) : mode==='reset' ? await supabase.auth.updateUser({password}) : await supabase.auth.signInWithPassword({ email, password })
       if (result.error) {
@@ -49,7 +49,7 @@ function AuthPage({ mode, setMode, onAuth }) {
           ? authNetworkErrorMessage(mode,navigator.onLine===false)
           : result.error.message)
       } else if (mode === 'signup' && !result.data.session) setError('Check your email to confirm your account, then sign in.')
-      else if(mode==='forgot')setError('If an account exists for this address, a password reset link is on its way.')
+      else if(mode==='forgot'){setError('The password reset link has been sent.');setSuccess(true)}
       else if(mode==='reset'){onAuth(null)}else onAuth(result.data.session)
     } catch (error) {
       const message=`${error?.message||''} ${error?.code||''}`
@@ -63,7 +63,7 @@ function AuthPage({ mode, setMode, onAuth }) {
     {mode!=='reset'&&<label>Email address<input name="email" type="email" required autoComplete="email" placeholder="you@example.com"/></label>}
     {mode!=='forgot'&&<label>{mode==='reset'?'New password':'Password'}<span className="password-input-wrap"><input id="auth-password" name="password" type={showPasswords?'text':'password'} minLength="8" required autoComplete={mode==='signup'||mode==='reset'?'new-password':'current-password'} placeholder="At least 8 characters"/><button className="password-visibility" type="button" aria-label={showPasswords?'Hide password':'Show password'} aria-pressed={showPasswords} aria-controls="auth-password" onClick={()=>setShowPasswords(value=>!value)}>{showPasswords?<EyeOff size={18}/>:<Eye size={18}/>}</button></span></label>}
     {mode==='signup'&&<label>Confirm password<span className="password-input-wrap"><input id="auth-confirm-password" name="confirmPassword" type={showPasswords?'text':'password'} minLength="8" required autoComplete="new-password" placeholder="Re-enter your password"/><button className="password-visibility" type="button" aria-label={showPasswords?'Hide passwords':'Show passwords'} aria-pressed={showPasswords} aria-controls="auth-confirm-password" onClick={()=>setShowPasswords(value=>!value)}>{showPasswords?<EyeOff size={18}/>:<Eye size={18}/>}</button></span></label>}
-    {error&&<p className="form-error">{error}</p>}<button className="button primary full" disabled={busy}>{busy?'Please wait…':mode==='signup'?'Create account':mode==='forgot'?'Send reset link':mode==='reset'?'Update password':'Sign in'}</button>
+    {error&&<p className={success?'form-success':'form-error'} role={success?'status':'alert'}>{error}</p>}<button className="button primary full" disabled={busy}>{busy?'Please wait…':mode==='signup'?'Create account':mode==='forgot'?'Send reset link':mode==='reset'?'Update password':'Sign in'}</button>
     </form>{mode==='login'&&<p className="auth-switch"><button className="text-button" onClick={()=>setMode('forgot')}>Forgot password?</button></p>}<p className="auth-switch">{mode==='signup'?'Already have an account?':mode==='reset'||mode==='forgot'?'Remember your password?':'New to DukaLedger?'} <button className="text-button" onClick={()=>setMode(mode==='login'?'signup':'login')}>{mode==='login'?'Create account':'Sign in'}</button></p></section><p className="auth-foot">Built for the everyday work of running a Kenyan shop.</p></main>
 }
 
