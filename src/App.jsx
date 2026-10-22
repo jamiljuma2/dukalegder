@@ -33,11 +33,30 @@ function InstallAppButton(){
  const isApple=/iphone|ipad|ipod/i.test(navigator.userAgent)
  return <div className="install-app-wrap"><button className="install-app-button" type="button" onClick={install}><Download size={15}/><span>Install app</span></button>{showHelp&&<div className="install-app-help" role="status"><strong>Install DukaLedger</strong><span>{isApple?'In Safari, tap Share, then “Add to Home Screen”.':'Open your browser menu and choose “Install app” or “Add to Home screen”.'}</span><button type="button" aria-label="Close install instructions" onClick={()=>setShowHelp(false)}><X size={14}/></button></div>}</div>
 }
+function authNetworkErrorMessage(mode,offline){
+ if(!offline)return 'Could not reach the sign-in service. Check your connection and try again.'
+ const action={signup:'Creating an account',forgot:'Requesting a password reset',reset:'Updating your password'}[mode]||'Signing in'
+ return `You’re offline. ${action} requires an internet connection. Reconnect and try again.${mode==='login'?' If you were already signed in before going offline, reopen the app without signing out to use saved shop data.':''}`
+}
 function AuthPage({ mode, setMode, onAuth }) {
   const [busy, setBusy] = useState(false); const [error, setError] = useState(''); const [showPasswords,setShowPasswords]=useState(false)
   async function submit(e) { e.preventDefault(); setError(''); const data = new FormData(e.currentTarget); const email=data.get('email'), password=data.get('password');if(mode==='signup'&&password!==data.get('confirmPassword')){setError('Passwords do not match.');return}setBusy(true)
-    const result = mode === 'signup' ? await supabase.auth.signUp({ email, password, options: { data: { full_name: data.get('name') }, emailRedirectTo: window.location.href } }) : mode==='forgot' ? await supabase.auth.resetPasswordForEmail(email,{redirectTo:`${window.location.origin}/login`}) : mode==='reset' ? await supabase.auth.updateUser({password}) : await supabase.auth.signInWithPassword({ email, password })
-    setBusy(false); if (result.error) setError(result.error.message); else if (mode === 'signup' && !result.data.session) setError('Check your email to confirm your account, then sign in.'); else if(mode==='forgot')setError('If an account exists for this address, a password reset link is on its way.');else if(mode==='reset'){onAuth(null)}else onAuth(result.data.session)
+    try {
+      const result = mode === 'signup' ? await supabase.auth.signUp({ email, password, options: { data: { full_name: data.get('name') }, emailRedirectTo: window.location.href } }) : mode==='forgot' ? await supabase.auth.resetPasswordForEmail(email,{redirectTo:`${window.location.origin}/login`}) : mode==='reset' ? await supabase.auth.updateUser({password}) : await supabase.auth.signInWithPassword({ email, password })
+      if (result.error) {
+        const message=`${result.error.message||''} ${result.error.code||''}`
+        setError(navigator.onLine===false||/failed to fetch|network|timeout|connection/i.test(message)
+          ? authNetworkErrorMessage(mode,navigator.onLine===false)
+          : result.error.message)
+      } else if (mode === 'signup' && !result.data.session) setError('Check your email to confirm your account, then sign in.')
+      else if(mode==='forgot')setError('If an account exists for this address, a password reset link is on its way.')
+      else if(mode==='reset'){onAuth(null)}else onAuth(result.data.session)
+    } catch (error) {
+      const message=`${error?.message||''} ${error?.code||''}`
+      setError(navigator.onLine===false||/failed to fetch|network|timeout|connection/i.test(message)
+        ? authNetworkErrorMessage(mode,navigator.onLine===false)
+        : error?.message||'Could not complete this request. Please try again.')
+    } finally { setBusy(false) }
   }
   return <main className="auth-shell"><div className="auth-brand"><BrandLogo className="auth-logo"/></div><section className="auth-card"><p className="eyebrow">YOUR SHOP, IN GOOD SHAPE</p><h1>{mode==='signup'?'Create your account':mode==='forgot'?'Reset your password':mode==='reset'?'Choose a new password':'Welcome back'}</h1><p className="muted">{mode==='forgot'?'We’ll email you a secure password reset link.':'Keep stock, sales and customer credit clear in one place.'}</p><form onSubmit={submit} className="stack-form">
     {mode==='signup'&&<label>Your name<input name="name" required autoComplete="name" placeholder="e.g. Amina Wanjiku"/></label>}
