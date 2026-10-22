@@ -220,6 +220,7 @@ body{background:var(--palette-ivory)}
 .landing-links>a{color:#3f5142}
 .landing-hero .landing-kicker,.landing-section-heading .landing-kicker,.landing-final .landing-kicker{font-size:11px}
 .landing-lede{color:#4d5f50;font-size:16px;line-height:1.75}
+.install-app-wrap{position:relative;display:inline-flex;flex:none}.install-app-button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:32px;padding:0 10px;border:1px solid #dce6da;border-radius:7px;background:#fff;color:#286b2b;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}.install-app-button:hover{background:#f3f8f1}.landing-links .install-app-button{font-size:13px}.install-app-help{position:absolute;z-index:50;right:0;top:calc(100% + 8px);display:grid;gap:6px;width:min(280px,calc(100vw - 32px));padding:13px 34px 13px 14px;border:1px solid #dce6da;border-radius:9px;background:#fff;box-shadow:0 12px 32px #172d4520;color:#405544;font-size:12px;line-height:1.5}.install-app-help strong{color:#253c28}.install-app-help>button{position:absolute;top:8px;right:8px;display:grid;place-items:center;padding:3px;border:0;background:transparent;color:#6f7d70;cursor:pointer}.landing-links .install-app-wrap{align-self:center}.offline-sync-head>.install-app-wrap{margin-left:3px}.offline-sync-head .install-app-button{min-height:30px}
 .landing-watch-link{color:#3e5040}
 .landing-trust strong{font-size:11px;color:#304432}
 .landing-trust small{font-size:10px;color:#667666}
